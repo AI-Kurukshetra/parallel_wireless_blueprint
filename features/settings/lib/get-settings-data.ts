@@ -1,5 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
+import { getTenantContext } from "@/lib/auth/access";
 import type { Database } from "@/types/database";
 
 type SubscriptionRow = Pick<
@@ -10,7 +10,7 @@ type PlanRow = Pick<Database["public"]["Tables"]["subscription_plans"]["Row"], "
 
 export async function getSettingsData() {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant } = await getTenantContext();
 
   const subscriptionResult = await supabase
     .from("subscriptions")

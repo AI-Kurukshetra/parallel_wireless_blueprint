@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { getTenantContext } from "@/lib/auth/access";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
 
 export async function GET() {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant, source } = await getTenantContext({ allowFallback: true });
 
   const [sitesResult, baseStationsResult, alarmsResult, invoicesResult, analyticsResult] = await Promise.all([
     supabase.from("sites").select("*", { count: "exact", head: true }).eq("tenant_id", tenant.id),
@@ -25,6 +25,7 @@ export async function GET() {
     status: "ready",
     generatedAt: new Date().toISOString(),
     tenant: tenant.slug,
+    source,
     totals: {
       metrics: 4,
       sites: sitesResult.count ?? 0,

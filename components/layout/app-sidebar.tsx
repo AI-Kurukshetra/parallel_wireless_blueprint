@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { navigationItems } from "@/lib/config/nav";
 import { cn } from "@/lib/utils/cn";
 
-export function AppSidebar() {
+export function AppSidebar({ tenantName }: { tenantName: string }) {
   const pathname = usePathname();
 
   return (
-    <aside className="rounded-[2rem] border border-white/70 bg-[#102a19] p-4 text-white shadow-panel">
+    <aside className="rounded-[2rem] border border-white/70 bg-telecom-900 p-4 text-white shadow-panel">
       <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/50">ORAN Intelligence</p>
         <p className="mt-3 text-2xl font-semibold leading-tight">
@@ -18,6 +18,7 @@ export function AppSidebar() {
           <br />
           command center
         </p>
+        <p className="mt-4 rounded-2xl bg-white/10 px-3 py-2 text-sm text-white/75">{tenantName}</p>
       </div>
 
       <nav className="mt-6 space-y-2">

@@ -1,5 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
+import { getTenantContext } from "@/lib/auth/access";
 import type { Alarm } from "@/types/domain";
 import type { Database } from "@/types/database";
 
@@ -8,7 +8,7 @@ type SiteLookupRow = Pick<Database["public"]["Tables"]["sites"]["Row"], "id" | "
 
 export async function getAlarms(): Promise<Alarm[]> {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant } = await getTenantContext();
 
   const [alarmsResult, sitesResult] = await Promise.all([
     supabase.from("alarms").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false }),

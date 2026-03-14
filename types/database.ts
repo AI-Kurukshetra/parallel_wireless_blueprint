@@ -116,18 +116,20 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string;
+          email: string | null;
           full_name: string | null;
           id: string;
           role: string;
-          tenant_id: string;
+          tenant_id: string | null;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
+          email?: string | null;
           full_name?: string | null;
           id: string;
           role?: string;
-          tenant_id: string;
+          tenant_id?: string | null;
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;

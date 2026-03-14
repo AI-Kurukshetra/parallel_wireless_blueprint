@@ -1,7 +1,7 @@
 import type { DashboardMetric } from "@/types/domain";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
+import { getTenantContext } from "@/lib/auth/access";
 import { average } from "@/lib/utils/numbers";
 import type { Alarm, AnalyticsSnapshot, BaseStation, Invoice, Site } from "@/types/domain";
 import type { Database } from "@/types/database";
@@ -20,7 +20,7 @@ export async function getDashboardData(): Promise<{
   analytics: AnalyticsSnapshot[];
 }> {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant } = await getTenantContext();
 
   const [sitesResult, baseStationsResult, alarmsResult, invoicesResult, snapshotsResult] = await Promise.all([
     supabase.from("sites").select("*").eq("tenant_id", tenant.id).order("subscribers", { ascending: false }).limit(5),

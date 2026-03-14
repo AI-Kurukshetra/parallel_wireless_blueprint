@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Activity, ArrowRight, ShieldCheck, TowerControl } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { getSession } from "@/lib/auth/session";
 import { appConfig } from "@/lib/config/app";
 
 const highlights = [
@@ -22,7 +23,9 @@ const highlights = [
   }
 ];
 
-export default function MarketingPage() {
+export default async function MarketingPage() {
+  const session = await getSession();
+
   return (
     <main className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10 lg:px-10">
       <header className="flex items-center justify-between rounded-full border border-white/70 bg-white/80 px-5 py-3 shadow-panel backdrop-blur">
@@ -32,7 +35,9 @@ export default function MarketingPage() {
           </p>
           <p className="text-xs text-ink/60">{appConfig.tagline}</p>
         </div>
-        <ButtonLink href="/dashboard">Open Demo</ButtonLink>
+        <ButtonLink href={session ? "/dashboard" : "/login"}>
+          {session ? "Open Workspace" : "Sign In"}
+        </ButtonLink>
       </header>
 
       <section className="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.2fr_0.8fr]">
@@ -51,8 +56,8 @@ export default function MarketingPage() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <ButtonLink href="/dashboard" className="min-w-40 justify-center">
-              Enter Dashboard
+            <ButtonLink href={session ? "/dashboard" : "/login"} className="min-w-40 justify-center">
+              {session ? "Enter Dashboard" : "Sign In"}
             </ButtonLink>
             <Link
               href="/settings"
@@ -64,13 +69,13 @@ export default function MarketingPage() {
         </div>
 
         <div className="rounded-[2rem] border border-white/70 bg-white/85 p-6 shadow-panel backdrop-blur">
-          <div className="rounded-[1.5rem] bg-ink p-6 text-white">
+          <div className="rounded-[1.5rem] bg-telecom-900 p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm uppercase tracking-[0.24em] text-white/50">Live network pulse</p>
                 <p className="mt-2 text-4xl font-semibold">98.4%</p>
               </div>
-              <span className="rounded-full bg-success/20 px-3 py-1 text-sm font-medium text-green-200">
+              <span className="rounded-full bg-accent/20 px-3 py-1 text-sm font-medium text-blue-100">
                 Stable
               </span>
             </div>
@@ -96,10 +101,10 @@ export default function MarketingPage() {
             </div>
 
             <Link
-              href="/dashboard"
+              href={session ? "/dashboard" : "/login"}
               className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white/90"
             >
-              View populated dashboard
+              {session ? "View tenant dashboard" : "Sign in to continue"}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

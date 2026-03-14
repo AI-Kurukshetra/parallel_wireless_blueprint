@@ -30,6 +30,12 @@ set
   base_station_limit = excluded.base_station_limit,
   support_tier = excluded.support_tier;
 
+-- Demo auth user setup:
+-- 1. Create a user in Supabase Auth with email/password through the dashboard or auth admin API.
+-- 2. Include user metadata:
+--    { "full_name": "Demo Operator", "tenant_slug": "oran-demo", "role": "operator" }
+-- 3. The auth trigger in 202603141900_auth_profiles_and_policies.sql will create the matching profile row.
+
 insert into public.subscriptions (id, tenant_id, plan_id, status, seats, started_at, renews_at)
 values
   (

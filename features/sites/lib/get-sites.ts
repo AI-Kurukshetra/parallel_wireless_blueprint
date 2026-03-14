@@ -1,5 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
+import { getTenantContext } from "@/lib/auth/access";
 import type { Site } from "@/types/domain";
 import type { Database } from "@/types/database";
 
@@ -7,7 +7,7 @@ type SiteRow = Database["public"]["Tables"]["sites"]["Row"];
 
 export async function getSites(): Promise<Site[]> {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant } = await getTenantContext();
 
   const { data, error } = await supabase
     .from("sites")

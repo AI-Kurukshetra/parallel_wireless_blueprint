@@ -9,9 +9,9 @@
 body {
   @apply bg-surface text-ink antialiased;
   background-image:
-    radial-gradient(circle at top left, rgba(47, 122, 73, 0.16), transparent 32%),
-    radial-gradient(circle at top right, rgba(47, 111, 237, 0.14), transparent 28%),
-    linear-gradient(180deg, #f7faf7 0%, #eef2ec 100%);
+    radial-gradient(circle at top left, rgba(70, 130, 180, 0.2), transparent 32%),
+    radial-gradient(circle at top right, rgba(46, 95, 135, 0.14), transparent 28%),
+    linear-gradient(180deg, #f7fbff 0%, #edf3f8 100%);
 }
 
 a {

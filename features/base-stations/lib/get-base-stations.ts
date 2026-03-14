@@ -1,5 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getDefaultTenant } from "@/lib/supabase/tenant";
+import { getTenantContext } from "@/lib/auth/access";
 import type { BaseStation } from "@/types/domain";
 import type { Database } from "@/types/database";
 
@@ -8,7 +8,7 @@ type SiteLookupRow = Pick<Database["public"]["Tables"]["sites"]["Row"], "id" | "
 
 export async function getBaseStations(): Promise<BaseStation[]> {
   const supabase = createSupabaseAdminClient();
-  const tenant = await getDefaultTenant();
+  const { tenant } = await getTenantContext();
 
   const [stationsResult, sitesResult] = await Promise.all([
     supabase.from("base_stations").select("*").eq("tenant_id", tenant.id).order("code", { ascending: true }),
