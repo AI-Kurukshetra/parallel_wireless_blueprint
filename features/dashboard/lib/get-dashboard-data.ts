@@ -64,19 +64,37 @@ export async function getDashboardData(): Promise<{
   const alarms: Alarm[] = alarmRows.map((alarm) => ({
     id: alarm.id,
     title: alarm.title,
+    siteId: alarm.site_id,
     siteName: siteMap.get(alarm.site_id) ?? "Unknown site",
+    baseStationId: alarm.base_station_id,
+    baseStationCode: baseStationRows.find((station) => station.id === alarm.base_station_id)?.code ?? null,
     severity: alarm.severity,
+    status: alarm.status,
     category: alarm.category,
+    sourceVendor: alarm.source_vendor,
+    description: alarm.description,
+    message: alarm.message,
     createdAt: alarm.created_at,
-    acknowledged: alarm.acknowledged
+    acknowledged: alarm.acknowledged,
+    acknowledgedAt: alarm.acknowledged_at,
+    assigneeProfileId: alarm.assignee_profile_id,
+    assigneeName: null,
+    assignedAt: alarm.assigned_at
   }));
 
   const invoices: Invoice[] = invoiceRows.map((invoice) => ({
     id: invoice.id,
+    invoiceNumber: invoice.invoice_number ?? `INV-${invoice.id.slice(0, 8).toUpperCase()}`,
     accountName: invoice.account_name,
-    amount: invoice.amount_cents / 100,
+    subtotal: (invoice.subtotal_cents || invoice.amount_cents) / 100,
+    total: (invoice.total_cents || invoice.amount_cents) / 100,
+    currency: invoice.currency,
+    issueDate: invoice.issue_date,
     dueDate: invoice.due_date,
-    status: invoice.status
+    status: invoice.status,
+    billingCycleId: invoice.billing_cycle_id,
+    paidAt: invoice.paid_at,
+    subscriptionId: invoice.subscription_id
   }));
 
   const analytics: AnalyticsSnapshot[] = snapshotRows.map((snapshot) => ({
@@ -103,7 +121,7 @@ export async function getDashboardData(): Promise<{
 
   const activeSites = mappedSites.filter((site) => site.status === "online").length;
   const criticalAlarms = alarms.filter((alarm) => alarm.severity === "critical" && !alarm.acknowledged).length;
-  const monthlyRevenue = invoices.reduce((sum, invoice) => sum + invoice.amount, 0);
+  const monthlyRevenue = invoices.reduce((sum, invoice) => sum + invoice.total, 0);
   const uptimeAverage = average(mappedSites.map((site) => site.uptime));
   const previousCoverage = analytics.at(-2)?.coverage ?? analytics[0]?.coverage ?? 0;
   const latestCoverage = analytics.at(-1)?.coverage ?? previousCoverage;

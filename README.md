@@ -29,10 +29,12 @@ types/          Shared domain and database types
 4. Apply `supabase/migrations/202603141900_auth_profiles_and_policies.sql`
 5. Apply `supabase/migrations/202603142030_sites_and_stations_soft_deactivate.sql`
 6. Apply `supabase/migrations/202603142130_uuid_defaults.sql`
-7. Run `supabase/seed.sql`
-8. Create a Supabase Auth user with metadata:
-   `{"full_name":"Demo Operator","tenant_slug":"oran-demo","role":"operator"}`
-9. Run `npm run dev`
+7. Apply `supabase/migrations/202603160930_alarm_workflow.sql`
+8. Apply `supabase/migrations/202603161130_billing_workflow.sql`
+9. Run `supabase/seed.sql`
+10. Create a Supabase Auth user with metadata:
+   `{"full_name":"Demo Admin","tenant_slug":"oran-demo","role":"admin"}`
+11. Run `npm run dev`
 
 ## Database
 
@@ -42,6 +44,8 @@ The app reads from Supabase database tables only. Local setup artifacts live in:
 - `supabase/migrations/202603141900_auth_profiles_and_policies.sql`
 - `supabase/migrations/202603142030_sites_and_stations_soft_deactivate.sql`
 - `supabase/migrations/202603142130_uuid_defaults.sql`
+- `supabase/migrations/202603160930_alarm_workflow.sql`
+- `supabase/migrations/202603161130_billing_workflow.sql`
 - `supabase/seed.sql`
 
 ## Authentication
