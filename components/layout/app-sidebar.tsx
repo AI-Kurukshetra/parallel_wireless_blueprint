@@ -21,17 +21,18 @@ export function AppSidebar({ tenantName }: { tenantName: string }) {
         <p className="mt-4 rounded-2xl bg-white/10 px-3 py-2 text-sm text-white/75">{tenantName}</p>
       </div>
 
-      <nav className="mt-6 space-y-2">
+      <nav className="mt-6 space-y-2" aria-label="Primary navigation">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
           return (
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-start gap-3 rounded-2xl px-4 py-3 transition",
+                "flex items-start gap-3 rounded-2xl px-4 py-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-telecom-900",
                 isActive ? "bg-white text-ink" : "text-white/80 hover:bg-white/10 hover:text-white"
               )}
             >

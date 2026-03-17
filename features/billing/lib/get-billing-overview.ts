@@ -1,5 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getTenantContext } from "@/lib/auth/access";
+import { getTenantContext, hasTenantRole } from "@/lib/auth/access";
 import type {
   BillingCycle,
   BillingCycleStatus,
@@ -78,7 +78,7 @@ export async function getBillingOverview(filters: BillingFilters = {}) {
   const supabase = createSupabaseAdminClient();
   const { tenant, profile } = await getTenantContext();
   const viewerRole = profile?.role ?? "viewer";
-  const canManageBilling = viewerRole === "owner" || viewerRole === "admin";
+  const canManageBilling = hasTenantRole(viewerRole, ["owner", "admin"]);
   const statusFilter =
     filters.status && ["all", "draft", "issued", "paid", "overdue", "void"].includes(filters.status)
       ? filters.status

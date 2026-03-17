@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { getTenantContext } from "@/lib/auth/access";
+import { getTenantContext, hasTenantRole } from "@/lib/auth/access";
 import type { BillingCycle, Invoice, InvoiceLineItem, SubscriptionSummary } from "@/types/domain";
 import type { Database } from "@/types/database";
 
@@ -55,7 +55,7 @@ export async function getInvoiceDetail(invoiceId: string) {
   const supabase = createSupabaseAdminClient();
   const { tenant, profile } = await getTenantContext();
   const viewerRole = profile?.role ?? "viewer";
-  const canManageBilling = viewerRole === "owner" || viewerRole === "admin";
+  const canManageBilling = hasTenantRole(viewerRole, ["owner", "admin"]);
 
   const invoiceResult = await supabase
     .from("invoices")

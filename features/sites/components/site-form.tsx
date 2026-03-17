@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { Field } from "@/components/forms/field";
 import { SelectField } from "@/components/forms/select-field";
 import { SubmitButton } from "@/components/forms/submit-button";
+import { Notice } from "@/components/ui/notice";
 import type { SiteFormState, SiteFormValues } from "@/features/sites/lib/site-schema";
 
 const initialState: SiteFormState = {
@@ -106,7 +107,7 @@ export function SiteForm({ action, defaultValues, submitLabel }: SiteFormProps) 
         </div>
       </div>
       {state.message ? (
-        <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.message}</p>
+        <Notice tone="error">{state.message}</Notice>
       ) : null}
       <div className="flex flex-wrap gap-3">
         <SubmitButton>{submitLabel}</SubmitButton>

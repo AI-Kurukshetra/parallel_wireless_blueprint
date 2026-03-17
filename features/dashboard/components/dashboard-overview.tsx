@@ -9,8 +9,8 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import { getDashboardData } from "@/features/dashboard/lib/get-dashboard-data";
-import { formatDateLabel, formatRelativeTime } from "@/lib/utils/dates";
-import { formatCompactNumber, formatCurrency } from "@/lib/utils/format";
+import { formatDateLabel, formatDateTimeLabel, formatRelativeTime } from "@/lib/utils/dates";
+import { formatCompactNumber, formatCurrency, formatEnumLabel } from "@/lib/utils/format";
 
 function getSeverityTone(severity: string) {
   switch (severity) {
@@ -109,11 +109,11 @@ export async function DashboardOverview() {
                 <>
                   <p className="mt-3 text-lg font-semibold text-ink">{subscription.plan.name}</p>
                   <p className="text-sm text-ink/60">
-                    {subscription.status.replace("_", " ")} • renews {formatDateLabel(subscription.renewsAt)}
+                    {formatEnumLabel(subscription.status)} • renews {formatDateLabel(subscription.renewsAt)}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Badge tone={subscription.status === "active" ? "success" : "warning"}>
-                      {subscription.status.replace("_", " ")}
+                      {formatEnumLabel(subscription.status)}
                     </Badge>
                     <Badge tone="neutral">{subscription.plan.supportTier}</Badge>
                   </div>
@@ -155,9 +155,11 @@ export async function DashboardOverview() {
                     <p className="font-medium text-ink">{item.title}</p>
                     <p className="text-sm text-ink/60">{item.description}</p>
                   </div>
-                  <Badge tone={item.type === "alarm" ? "warning" : "info"}>{item.type}</Badge>
+                  <Badge tone={item.type === "alarm" ? "warning" : "info"}>{formatEnumLabel(item.type)}</Badge>
                 </div>
-                <p className="mt-3 text-xs uppercase tracking-[0.2em] text-ink/40">{formatRelativeTime(item.occurredAt)}</p>
+                <p className="mt-3 text-xs uppercase tracking-[0.2em] text-ink/40">
+                  {formatDateTimeLabel(item.occurredAt)} • {formatRelativeTime(item.occurredAt)}
+                </p>
               </Link>
             ))}
           </CardContent>

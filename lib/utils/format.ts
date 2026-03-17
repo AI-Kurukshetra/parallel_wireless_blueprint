@@ -16,3 +16,7 @@ export function formatCurrency(value: number, currency = "USD") {
     maximumFractionDigits: 0
   }).format(value);
 }
+
+export function formatEnumLabel(value: string) {
+  return value.replace(/_/g, " ");
+}

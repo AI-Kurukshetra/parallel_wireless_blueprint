@@ -17,6 +17,8 @@ export function Notice({
 }) {
   return (
     <div
+      role={tone === "error" ? "alert" : "status"}
+      aria-live={tone === "error" ? "assertive" : "polite"}
       className={cn("rounded-2xl border px-4 py-3 text-sm", tones[tone], className)}
       {...props}
     />

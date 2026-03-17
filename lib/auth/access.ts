@@ -140,3 +140,7 @@ export async function getTenantContext(options?: { allowFallback?: boolean }) {
 
   throw new Error(`Tenant context unavailable: ${access.status}`);
 }
+
+export function hasTenantRole(role: string | null | undefined, allowedRoles: string[]) {
+  return Boolean(role && allowedRoles.includes(role));
+}

@@ -8,7 +8,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { getBillingOverview, type BillingFilters } from "@/features/billing/lib/get-billing-overview";
 import { formatDateLabel } from "@/lib/utils/dates";
-import { formatCurrency } from "@/lib/utils/format";
+import { formatCurrency, formatEnumLabel } from "@/lib/utils/format";
 
 function getInvoiceTone(status: string) {
   switch (status) {
@@ -85,7 +85,7 @@ export async function BillingPageView({
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Badge tone={overview.subscription.status === "active" ? "success" : "warning"}>
-                    {overview.subscription.status.replace("_", " ")}
+                    {formatEnumLabel(overview.subscription.status)}
                   </Badge>
                   <Badge tone="neutral">{overview.subscription.plan.supportTier}</Badge>
                 </div>
@@ -170,7 +170,7 @@ export async function BillingPageView({
                   <p className="font-medium text-ink">
                     {formatDateLabel(cycle.cycleStart)} to {formatDateLabel(cycle.cycleEnd)}
                   </p>
-                  <Badge tone={getCycleTone(cycle.status)}>{cycle.status}</Badge>
+                  <Badge tone={getCycleTone(cycle.status)}>{formatEnumLabel(cycle.status)}</Badge>
                 </div>
                 <p className="mt-2 text-sm text-ink/60">
                   Invoice date {formatDateLabel(cycle.invoiceDate)} • Due {formatDateLabel(cycle.dueDate)}
@@ -187,7 +187,7 @@ export async function BillingPageView({
           <select
             name="status"
             defaultValue={overview.filters.status}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -201,7 +201,7 @@ export async function BillingPageView({
           <select
             name="sort"
             defaultValue={overview.filters.sort}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             <option value="due_asc">Due date, oldest first</option>
             <option value="due_desc">Due date, newest first</option>
@@ -212,7 +212,7 @@ export async function BillingPageView({
         <div className="flex flex-wrap items-end gap-3">
           <button
             type="submit"
-            className="inline-flex items-center rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground"
+            className="inline-flex items-center rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Apply Filters
           </button>
@@ -237,7 +237,7 @@ export async function BillingPageView({
             <td className="px-4 py-4 text-sm text-ink/65">{formatDateLabel(invoice.dueDate)}</td>
             <td className="px-4 py-4 text-sm text-ink/65">{formatCurrency(invoice.total, invoice.currency)}</td>
             <td className="px-4 py-4">
-              <Badge tone={getInvoiceTone(invoice.status)}>{invoice.status}</Badge>
+              <Badge tone={getInvoiceTone(invoice.status)}>{formatEnumLabel(invoice.status)}</Badge>
             </td>
             <td className="rounded-r-2xl px-4 py-4 text-sm">
               <div className="flex flex-wrap gap-3">

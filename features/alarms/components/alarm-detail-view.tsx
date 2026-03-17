@@ -8,6 +8,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { formatDateLabel, formatRelativeTime } from "@/lib/utils/dates";
+import { formatEnumLabel } from "@/lib/utils/format";
 
 export function AlarmDetailView({
   alarm,
@@ -73,7 +74,7 @@ export function AlarmDetailView({
               </div>
               <div className="rounded-2xl bg-surface px-4 py-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Status</p>
-                <p className="mt-2 text-lg font-medium">{alarm.status.replace("_", " ")}</p>
+                <p className="mt-2 text-lg font-medium">{formatEnumLabel(alarm.status)}</p>
               </div>
               <div className="rounded-2xl bg-surface px-4 py-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Opened</p>
@@ -109,7 +110,7 @@ export function AlarmDetailView({
               {events.map((event) => (
                 <div key={event.id} className="rounded-2xl border border-ink/8 bg-surface px-4 py-4">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-medium capitalize">{event.eventType.replace("_", " ")}</p>
+                    <p className="font-medium capitalize">{formatEnumLabel(event.eventType)}</p>
                     <p className="text-sm text-ink/55">{formatRelativeTime(event.createdAt)}</p>
                   </div>
                   <p className="mt-2 text-sm text-ink/70">{event.message}</p>
@@ -139,7 +140,7 @@ export function AlarmDetailView({
                 <select
                   name="assigneeProfileId"
                   defaultValue={alarm.assigneeProfileId ?? ""}
-                  className="mt-4 w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                  className="mt-4 w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                 >
                   <option value="">Select assignee</option>
                   {assigneeOptions.map((option) => (
@@ -157,7 +158,7 @@ export function AlarmDetailView({
                 <select
                   name="status"
                   defaultValue={alarm.status}
-                  className="mt-4 w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                  className="mt-4 w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                 >
                   <option value="open">Open</option>
                   <option value="acknowledged">Acknowledged</option>
@@ -182,7 +183,7 @@ export function AlarmDetailView({
                   name="body"
                   rows={4}
                   placeholder="Add an operational note"
-                  className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                  className="w-full rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                 />
                 <SubmitButton pendingLabel="Saving note...">Add Note</SubmitButton>
               </form>

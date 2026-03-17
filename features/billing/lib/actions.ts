@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-import { getTenantContext } from "@/lib/auth/access";
+import { getTenantContext, hasTenantRole } from "@/lib/auth/access";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 import type { InvoiceWorkflowStatus } from "@/types/domain";
@@ -24,10 +24,6 @@ const subscriptionUpdateSchema = z.object({
 const invoiceStatusSchema = z.object({
   status: z.enum(["issued", "paid", "overdue", "void"])
 });
-
-function canManage(role: string) {
-  return role === "owner" || role === "admin";
-}
 
 function billingUrl(path: string, params: Record<string, string>) {
   const query = new URLSearchParams(params).toString();
@@ -80,7 +76,7 @@ export async function updateSubscriptionAction(formData: FormData) {
     const supabase = createSupabaseAdminClient();
     const { tenant, profile } = await getTenantContext();
 
-    if (!profile || !canManage(profile.role)) {
+    if (!hasTenantRole(profile?.role, ["owner", "admin"])) {
       redirect(billingUrl("/billing/subscription", { error: "You do not have permission to update subscriptions." }));
     }
 
@@ -158,7 +154,7 @@ export async function updateInvoiceStatusAction(invoiceId: string, formData: For
     const { tenant, profile } = await getTenantContext();
     const actorProfileId = profile?.id ?? null;
 
-    if (!profile || !canManage(profile.role)) {
+    if (!hasTenantRole(profile?.role, ["owner", "admin"])) {
       redirect(billingUrl(`/billing/invoices/${invoiceId}`, { error: "You do not have permission to update invoices." }));
     }
 

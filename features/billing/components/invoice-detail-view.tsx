@@ -8,7 +8,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { updateInvoiceStatusAction } from "@/features/billing/lib/actions";
 import { formatDateLabel } from "@/lib/utils/dates";
-import { formatCurrency } from "@/lib/utils/format";
+import { formatCurrency, formatEnumLabel } from "@/lib/utils/format";
 import type { BillingCycle, Invoice, InvoiceLineItem, SubscriptionSummary } from "@/types/domain";
 
 function getInvoiceTone(status: string) {
@@ -89,7 +89,7 @@ export function InvoiceDetailView({
               <div className="rounded-2xl bg-surface px-4 py-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Status</p>
                 <div className="mt-3">
-                  <Badge tone={getInvoiceTone(invoice.status)}>{invoice.status}</Badge>
+                  <Badge tone={getInvoiceTone(invoice.status)}>{formatEnumLabel(invoice.status)}</Badge>
                 </div>
               </div>
               <div className="rounded-2xl bg-surface px-4 py-4">
@@ -151,7 +151,7 @@ export function InvoiceDetailView({
                       <span className="font-medium text-ink">Next status</span>
                       <select
                         name="status"
-                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                       >
                         {availableActions.map((action) => (
                           <option key={action.value} value={action.value}>
@@ -182,7 +182,7 @@ export function InvoiceDetailView({
                   <>
                     <p className="mt-2 font-medium text-ink">{subscription.plan.name}</p>
                     <p className="text-sm text-ink/55">
-                      {subscription.status.replace("_", " ")} • {subscription.seats} seats
+                      {formatEnumLabel(subscription.status)} • {subscription.seats} seats
                     </p>
                     <Link href="/billing/subscription" className="mt-3 inline-flex text-sm font-medium text-accent">
                       View Subscription

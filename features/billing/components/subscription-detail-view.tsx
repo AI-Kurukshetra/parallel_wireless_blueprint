@@ -9,7 +9,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { formatDateLabel } from "@/lib/utils/dates";
-import { formatCurrency } from "@/lib/utils/format";
+import { formatCurrency, formatEnumLabel } from "@/lib/utils/format";
 
 export function SubscriptionDetailView({
   subscription,
@@ -63,7 +63,7 @@ export function SubscriptionDetailView({
                   <p className="text-xs uppercase tracking-[0.2em] text-ink/45">Status</p>
                   <div className="mt-3">
                     <Badge tone={subscription.status === "active" ? "success" : "warning"}>
-                      {subscription.status.replace("_", " ")}
+                      {formatEnumLabel(subscription.status)}
                     </Badge>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ export function SubscriptionDetailView({
                       <select
                         name="planId"
                         defaultValue={subscription.plan.id}
-                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                       >
                         {plans.filter((plan) => plan.isActive).map((plan) => (
                           <option key={plan.id} value={plan.id}>
@@ -157,7 +157,7 @@ export function SubscriptionDetailView({
                       <select
                         name="status"
                         defaultValue={subscription.status}
-                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                       >
                         <option value="trialing">Trialing</option>
                         <option value="active">Active</option>
@@ -172,7 +172,7 @@ export function SubscriptionDetailView({
                         min={1}
                         name="seats"
                         defaultValue={subscription.seats}
-                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+                        className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                       />
                     </label>
                     <SubmitButton pendingLabel="Saving subscription...">Save Subscription</SubmitButton>

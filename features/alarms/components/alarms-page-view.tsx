@@ -7,6 +7,7 @@ import { Notice } from "@/components/ui/notice";
 import { PageHeader } from "@/components/ui/page-header";
 import { getAlarms, type AlarmListFilters } from "@/features/alarms/lib/get-alarms";
 import { formatRelativeTime } from "@/lib/utils/dates";
+import { formatEnumLabel } from "@/lib/utils/format";
 
 const severityOptions = [
   { value: "all", label: "All severities" },
@@ -52,7 +53,7 @@ export async function AlarmsPageView({
             name="search"
             defaultValue={filters.search}
             placeholder="Title, message, vendor"
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           />
         </label>
         <label className="grid gap-2 text-sm text-ink/70">
@@ -60,7 +61,7 @@ export async function AlarmsPageView({
           <select
             name="severity"
             defaultValue={filters.severity ?? "all"}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             {severityOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -74,7 +75,7 @@ export async function AlarmsPageView({
           <select
             name="status"
             defaultValue={filters.status ?? "all"}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -88,7 +89,7 @@ export async function AlarmsPageView({
           <select
             name="siteId"
             defaultValue={filters.siteId ?? ""}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             <option value="">All sites</option>
             {filterOptions.sites.map((option) => (
@@ -103,7 +104,7 @@ export async function AlarmsPageView({
           <select
             name="baseStationId"
             defaultValue={filters.baseStationId ?? ""}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             <option value="">All base stations</option>
             {filterOptions.baseStations.map((option) => (
@@ -118,7 +119,7 @@ export async function AlarmsPageView({
           <select
             name="sort"
             defaultValue={filters.sort ?? "newest"}
-            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent"
+            className="rounded-2xl border border-ink/10 bg-white px-4 py-3 outline-none transition focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
           >
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
@@ -129,7 +130,7 @@ export async function AlarmsPageView({
         <div className="flex flex-wrap items-end gap-3 md:col-span-4">
           <button
             type="submit"
-            className="inline-flex items-center rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground"
+            className="inline-flex items-center rounded-full bg-accent px-5 py-3 text-sm font-medium text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Apply Filters
           </button>
@@ -157,7 +158,7 @@ export async function AlarmsPageView({
             </td>
             <td className="px-4 py-4 text-sm text-ink/65">
               <Badge tone={alarm.status === "resolved" || alarm.status === "closed" ? "success" : "info"}>
-                {alarm.status.replace("_", " ")}
+                {formatEnumLabel(alarm.status)}
               </Badge>
             </td>
             <td className="px-4 py-4 text-sm text-ink/65">{formatRelativeTime(alarm.createdAt)}</td>
