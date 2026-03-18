@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import { getDefaultPathForUser } from "@/lib/auth/access";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function getLoginRedirect(searchParams?: URLSearchParams) {
@@ -12,14 +13,14 @@ function getLoginRedirect(searchParams?: URLSearchParams) {
 export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const next = String(formData.get("next") ?? "/dashboard");
+  const next = String(formData.get("next") ?? "");
 
   if (!email || !password) {
     redirect(getLoginRedirect(new URLSearchParams({ error: "Email and password are required." })));
   }
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password
   });
@@ -28,7 +29,8 @@ export async function signInAction(formData: FormData) {
     redirect(getLoginRedirect(new URLSearchParams({ error: error.message })));
   }
 
-  redirect(next.startsWith("/") ? next : "/dashboard");
+  const defaultPath = data.user ? await getDefaultPathForUser(data.user.id) : "/dashboard";
+  redirect(next.startsWith("/") && next ? next : defaultPath);
 }
 
 export async function signOutAction() {

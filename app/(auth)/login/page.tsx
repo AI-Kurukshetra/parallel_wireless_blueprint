@@ -4,6 +4,7 @@ import { Field } from "@/components/forms/field";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { signInAction } from "@/lib/auth/actions";
+import { getDefaultSignedInPath } from "@/lib/auth/access";
 import { getSession } from "@/lib/auth/session";
 
 export default async function LoginPage({
@@ -15,7 +16,7 @@ export default async function LoginPage({
   const params = await searchParams;
 
   if (session) {
-    redirect(params.next ?? "/dashboard");
+    redirect(params.next ?? (await getDefaultSignedInPath()));
   }
 
   return (
@@ -33,7 +34,7 @@ export default async function LoginPage({
             through the `profiles` table and user metadata bootstrap flow.
           </p>
           <form action={signInAction} className="space-y-4">
-            <input type="hidden" name="next" value={params.next ?? "/dashboard"} />
+            <input type="hidden" name="next" value={params.next ?? ""} />
             <Field label="Email" name="email" type="email" autoComplete="email" required />
             <Field
               label="Password"

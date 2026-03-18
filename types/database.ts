@@ -253,6 +253,8 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           id: string;
+          is_active: boolean;
+          is_super_admin: boolean;
           role: string;
           tenant_id: string | null;
           updated_at: string;
@@ -262,6 +264,8 @@ export type Database = {
           email?: string | null;
           full_name?: string | null;
           id: string;
+          is_active?: boolean;
+          is_super_admin?: boolean;
           role?: string;
           tenant_id?: string | null;
           updated_at?: string;
@@ -377,6 +381,7 @@ export type Database = {
           critical_alarm_threshold: number;
           default_region: string;
           id: string;
+          is_active: boolean;
           name: string;
           slug: string;
           updated_at: string;
@@ -386,6 +391,7 @@ export type Database = {
           critical_alarm_threshold?: number;
           default_region: string;
           id?: string;
+          is_active?: boolean;
           name: string;
           slug: string;
           updated_at?: string;

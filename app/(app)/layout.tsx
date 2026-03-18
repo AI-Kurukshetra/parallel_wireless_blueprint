@@ -32,6 +32,26 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     );
   }
 
+  if (access.status === "inactive_profile") {
+    return (
+      <AccessFallback
+        title="Your account has been deactivated."
+        description="A platform administrator has disabled this user profile. Contact support if you still need access."
+        email={access.user.email}
+      />
+    );
+  }
+
+  if (access.status === "inactive_tenant") {
+    return (
+      <AccessFallback
+        title="Your tenant is currently inactive."
+        description="This tenant has been deactivated by the platform administrator. Contact support before using the workspace again."
+        email={access.user.email}
+      />
+    );
+  }
+
   return (
     <AppShell
       viewer={{

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Activity, ArrowRight, ShieldCheck, TowerControl } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button-link";
+import { getDefaultSignedInPath } from "@/lib/auth/access";
 import { getSession } from "@/lib/auth/session";
 import { appConfig } from "@/lib/config/app";
 
@@ -25,6 +26,7 @@ const highlights = [
 
 export default async function MarketingPage() {
   const session = await getSession();
+  const signedInHref = session ? await getDefaultSignedInPath() : "/login";
 
   return (
     <main className="mx-auto flex min-h-screen max-w-7xl flex-col px-6 py-10 lg:px-10">
@@ -35,7 +37,7 @@ export default async function MarketingPage() {
           </p>
           <p className="text-xs text-ink/60">{appConfig.tagline}</p>
         </div>
-        <ButtonLink href={session ? "/dashboard" : "/login"}>
+        <ButtonLink href={signedInHref}>
           {session ? "Open Workspace" : "Sign In"}
         </ButtonLink>
       </header>
@@ -56,7 +58,7 @@ export default async function MarketingPage() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <ButtonLink href={session ? "/dashboard" : "/login"} className="min-w-40 justify-center">
+            <ButtonLink href={signedInHref} className="min-w-40 justify-center">
               {session ? "Enter Dashboard" : "Sign In"}
             </ButtonLink>
             <Link
@@ -101,7 +103,7 @@ export default async function MarketingPage() {
             </div>
 
             <Link
-              href={session ? "/dashboard" : "/login"}
+              href={signedInHref}
               className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white/90"
             >
               {session ? "View tenant dashboard" : "Sign in to continue"}

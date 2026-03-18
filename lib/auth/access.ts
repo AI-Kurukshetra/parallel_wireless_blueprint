@@ -25,6 +25,19 @@ type MissingTenantAccess = {
   profile: ProfileRecord;
 };
 
+type InactiveProfileAccess = {
+  status: "inactive_profile";
+  user: User;
+  profile: ProfileRecord;
+};
+
+type InactiveTenantAccess = {
+  status: "inactive_tenant";
+  user: User;
+  profile: ProfileRecord;
+  tenant: TenantRecord;
+};
+
 type ReadyAccess = {
   status: "ready";
   user: User;
@@ -36,6 +49,8 @@ export type AppAccessState =
   | SignedOutAccess
   | MissingProfileAccess
   | MissingTenantAccess
+  | InactiveProfileAccess
+  | InactiveTenantAccess
   | ReadyAccess;
 
 export const getAppAccessState = cache(async (): Promise<AppAccessState> => {
@@ -64,6 +79,14 @@ export const getAppAccessState = cache(async (): Promise<AppAccessState> => {
     };
   }
 
+  if (!profile.is_active) {
+    return {
+      status: "inactive_profile",
+      user,
+      profile
+    };
+  }
+
   if (!profile.tenant_id) {
     return {
       status: "missing_tenant",
@@ -85,6 +108,15 @@ export const getAppAccessState = cache(async (): Promise<AppAccessState> => {
       status: "missing_tenant",
       user,
       profile
+    };
+  }
+
+  if (!tenant.is_active) {
+    return {
+      status: "inactive_tenant",
+      user,
+      profile,
+      tenant
     };
   }
 
@@ -141,6 +173,57 @@ export async function getTenantContext(options?: { allowFallback?: boolean }) {
   throw new Error(`Tenant context unavailable: ${access.status}`);
 }
 
+export async function requireSuperAdminAccess() {
+  const access = await getAppAccessState();
+
+  if (access.status === "signed_out") {
+    redirect("/login?next=/admin");
+  }
+
+  if (access.status === "missing_profile") {
+    throw new Error("Super admin access requires an application profile.");
+  }
+
+  if (access.status === "inactive_profile") {
+    throw new Error("This user profile is inactive.");
+  }
+
+  if ((access.status === "ready" || access.status === "missing_tenant" || access.status === "inactive_tenant") && access.profile.is_super_admin) {
+    return {
+      user: access.user,
+      profile: access.profile,
+      tenant: access.status === "ready" || access.status === "inactive_tenant" ? access.tenant : null
+    };
+  }
+
+  throw new Error("Super admin access required.");
+}
+
 export function hasTenantRole(role: string | null | undefined, allowedRoles: string[]) {
   return Boolean(role && allowedRoles.includes(role));
+}
+
+export async function getDefaultSignedInPath() {
+  const access = await getAppAccessState();
+
+  if (
+    (access.status === "ready" || access.status === "missing_tenant" || access.status === "inactive_tenant" || access.status === "inactive_profile") &&
+    access.profile.is_super_admin
+  ) {
+    return "/admin";
+  }
+
+  return "/dashboard";
+}
+
+export async function getDefaultPathForUser(userId: string) {
+  const admin = createSupabaseAdminClient();
+  const profileResult = await admin.from("profiles").select("is_super_admin").eq("id", userId).maybeSingle();
+
+  if (profileResult.error) {
+    throw profileResult.error;
+  }
+
+  const profile = profileResult.data as Pick<ProfileRecord, "is_super_admin"> | null;
+  return profile?.is_super_admin ? "/admin" : "/dashboard";
 }
